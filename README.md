@@ -29,20 +29,21 @@
 - Oh-My-Zsh (will be prompted to install if missing)
 
 ### Quick Install
+```bash
 curl -fsSL https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/install.sh | bash
-
+```
 ### Or Manual Install / Run with Options
+```bash
 wget https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/install.sh
 chmod +x install.sh
-
-# Interactive installation
 ./install.sh   
  # Automated installation  
 ./install.sh --unattended     
 # Config only, no tools
 ./install.sh --no-tools       
  # Show help
-./install.sh --help         
+./install.sh --help
+```         
 
 ### First-time Setup
 # Initialize the cybersecurity environment
