@@ -656,6 +656,62 @@ msf_payload() {
 }
 
 # =====================================
+# CUSTOM WORDLIST MANAGEMENT
+# =====================================
+
+# Create custom wordlist from target
+create_wordlist() {
+    if [ -z "$1" ]; then
+        echo "Usage: create_wordlist <url_or_file>"
+        return 1
+    fi
+    
+    local target=$1
+    local timestamp=$(date +%Y%m%d_%H%M%S)
+    local wordlist_name="custom_${timestamp}.txt"
+    
+    echo "📝 Creating custom wordlist from $target..."
+    
+    if [[ $target =~ ^https?:// ]]; then
+        # Extract from website
+        curl -s "$target" | grep -oE '[a-zA-Z]+' | sort -u > "$HOME/cybersec/wordlists/$wordlist_name"
+    else
+        # Extract from file
+        grep -oE '[a-zA-Z]+' "$target" | sort -u > "$HOME/cybersec/wordlists/$wordlist_name"
+    fi
+    
+    echo "✅ Wordlist created: ~/cybersec/wordlists/$wordlist_name"
+    echo "📊 Words: $(wc -l < "$HOME/cybersec/wordlists/$wordlist_name")"
+}
+
+# List custom wordlists
+list_wordlists() {
+    echo "📝 Available wordlists:"
+    echo ""
+    echo "🔧 System wordlists:"
+    ls -la /usr/share/wordlists/ 2>/dev/null | head -10
+    echo ""
+    echo "📝 Custom wordlists:"
+    ls -la "$HOME/cybersec/wordlists/" 2>/dev/null || echo "No custom wordlists found"
+}
+
+# Combine wordlists
+combine_wordlists() {
+    if [ $# -lt 2 ]; then
+        echo "Usage: combine_wordlists <output_name> <wordlist1> <wordlist2> [wordlist3...]"
+        return 1
+    fi
+    
+    local output_name="$1"
+    shift
+    
+    echo "📝 Combining wordlists into $output_name..."
+    cat "$@" | sort -u > "$HOME/cybersec/wordlists/$output_name"
+    echo "✅ Combined wordlist created: ~/cybersec/wordlists/$output_name"
+    echo "📊 Total words: $(wc -l < "$HOME/cybersec/wordlists/$output_name")"
+}
+
+# =====================================
 # WORKFLOW AUTOMATION
 # =====================================
 
