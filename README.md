@@ -271,38 +271,9 @@ webtest https://target.com
 autorecon target.com
 ```
 
-## 🤝 Contributing
-
-Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting pull requests.
-
-### How to Contribute
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/new-tool`)
-3. Commit your changes (`git commit -am 'Add new tool integration'`)
-4. Push to the branch (`git push origin feature/new-tool`)
-5. Create a Pull Request
-
-### Areas for Contribution
-- New tool integrations
-- Performance improvements
-- Documentation enhancements
-- Bug fixes and optimizations
-- Platform support (macOS, other Linux distributions)
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## ⚠️ Disclaimer
 
 This configuration is designed for authorized security testing only. Users are responsible for ensuring they have proper authorization before using these tools against any systems. The authors are not responsible for any misuse or damage caused by this software.
-
-## 🔗 Related Projects
-
-- [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh) - Framework for managing Zsh configuration
-- [ProjectDiscovery Tools](https://github.com/projectdiscovery) - Modern security tools
-- [SecLists](https://github.com/danielmiessler/SecLists) - Security testing wordlists
-
 
 ## Acknowledgments
 
