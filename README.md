@@ -33,7 +33,9 @@ Functionality and Advanced Tools Integration
 
 ### Quick Install
 ```bash
-curl -fsSL https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/install.sh | bash
+wget https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/install.sh
+chmod +x install.sh
+./install.sh
 ```
 
 ### Options
