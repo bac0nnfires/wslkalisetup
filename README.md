@@ -1,11 +1,9 @@
-# 🛡️WSL Kali Setup - Cybersecurity Configuration 
+🛡️ WSL Kali Setup - Cybersecurity Configuration 
 
 <img width="450" height="400" alt="image" src="https://github.com/user-attachments/assets/610cc583-a541-49d7-8a65-1196b76f9047" />
 
-
-### 🚀 Features
-
-### Functionality
+### 🚀 Features 🚀
+### Functionality 
 - **Automated Reconnaissance**: Network discovery, port scanning, service enumeration
 - **Web Application Testing**: Comprehensive web security assessment tools
 - **Payload Generation**: Multiple reverse shell and exploit payload generators
@@ -24,7 +22,7 @@
 - **Copy/Paste Optimization**: Better terminal text handling
 - **Colour-coded Output**: Enhanced readability for scan results
 
-## 📦 Installation
+## 📦 Installation 📦
 
 ### Prerequisites
 - WSL / Linux-based system (Kali, Ubuntu, Debian recommended)
@@ -63,7 +61,7 @@ install-python-tools
 setup_api_keys
 ```
 
-## 🛠️ Usage
+## 🛠️ Usage 🛠️
 
 ### Quick Start Commands
 
@@ -161,7 +159,7 @@ ports 192.168.1.1
 vulncheck 192.168.1.100
 ```
 
-## 📁 Directory Structure
+## 📁 Directory Structure 📁
 
 After running `setup-cybersec`, your workspace will be organized as:
 
@@ -233,7 +231,7 @@ The configuration includes automated installation for:
 - Go-based security tools (subfinder, httpx, nuclei)
 - Python security libraries (impacket, crackmapexec)
 
-## 📚 Examples
+## 📚 COMMAND EXAMPLES 📚
 
 ### Penetration Testing Workflow
 ```bash
@@ -275,7 +273,7 @@ autorecon target.com
 
 ## ⚠️ Disclaimer
 
-This configuration is designed for authorized security testing only. Users are responsible for ensuring they have proper authorization before using these tools against any systems. The authors are not responsible for any misuse or damage caused by this software.
+This configuration is designed for authorized security testing only. Users are responsible for ensuring they have proper authorization before using these tools against any systems. The authors are not responsible for any misuse or damage caused by this software, script or code.
 
 ## Acknowledgments
 
