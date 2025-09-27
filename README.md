@@ -1,6 +1,6 @@
-# 🛡️ PANDABOX Cybersecurity Configuration - WSL Kali
+# 🛡️WSL Kali Setup - Cybersecurity Configuration 
 
-A comprehensive Zsh configuration designed for cybersecurity professionals, penetration testers, and security researchers. This configuration provides an organized, efficient environment with automated tools and workflows for security testing.
+A comprehensive, easy, user friendly Zsh configuration designed for cybersecurity professionals, penetration testers, and security researchers. This configuration provides an organized, efficient environment with automated tools and workflows for security testing.
 
 ## 🚀 Features
 
@@ -28,7 +28,7 @@ A comprehensive Zsh configuration designed for cybersecurity professionals, pene
 ## 📦 Installation
 
 ### Prerequisites
-- Linux-based system (Kali, Ubuntu, Debian recommended)
+- WSL / Linux-based system (Kali, Ubuntu, Debian recommended)
 - Zsh shell
 - Oh-My-Zsh (will be prompted to install if missing)
 
