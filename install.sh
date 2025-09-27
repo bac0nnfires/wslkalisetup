@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # WSL Kali Setup - Cybersecurity Configuration Installer
-# ======================================================
+# ==============================================================
 
 set -e
 
@@ -69,7 +69,7 @@ check_requirements() {
     fi
     
     # Check for required commands
-    local required_commands=("curl" "git" "zsh")
+    local required_commands=("curl" "git" "zsh" "wget" "unzip")
     local missing_commands=()
     
     for cmd in "${required_commands[@]}"; do
@@ -140,7 +140,7 @@ install_zsh_plugins() {
 
 # Download and install configuration
 install_configuration() {
-    print_status "Downloading WSL Kali cybersecurity configuration..."
+    print_status "Downloading enhanced WSL Kali cybersecurity configuration..."
     
     # Download the main configuration file
     curl -fsSL "$REPO_URL/.zshrc" -o "$HOME/.zshrc.wslkali"
@@ -154,7 +154,7 @@ install_configuration() {
     # Install new configuration
     mv "$HOME/.zshrc.wslkali" "$HOME/.zshrc"
     
-    print_success "WSL Kali cybersecurity configuration installed"
+    print_success "Enhanced WSL Kali cybersecurity configuration installed"
 }
 
 # Set Zsh as default shell
@@ -180,67 +180,98 @@ set_default_shell() {
 install_basic_tools() {
     print_status "Installing basic penetration testing tools..."
     
+    sudo apt update
+    
     local tools=(
-        "nmap"
-        "gobuster" 
-        "nikto"
-        "whatweb"
-        "curl"
-        "wget"
-        "git"
-        "netcat-openbsd"
-        "xclip"
-        "enum4linux"
-        "smbclient"
-        "dirb"
-        "python3-pip"
-        "tree"
-        "jq"
+        "nmap" "gobuster" "nikto" "whatweb" "curl" "wget" "git"
+        "enum4linux" "smbclient" "netcat-openbsd" "xclip" "tree" "jq"
+        "make" "unzip" "masscan" "amass" "metasploit-framework"
+        "python3-pip" "searchsploit"
     )
     
-    if command_exists "apt"; then
-        sudo apt update
-        for tool in "${tools[@]}"; do
-            if ! dpkg -l | grep -q "^ii  $tool "; then
-                print_status "Installing $tool..."
-                sudo apt install -y "$tool" || print_warning "Failed to install $tool"
-            else
-                print_status "$tool already installed"
-            fi
-        done
-        
-        # Install wordlists
-        if [ ! -d "/usr/share/wordlists" ]; then
-            print_status "Installing wordlists..."
-            sudo apt install -y wordlists || print_warning "Failed to install wordlists"
+    for tool in "${tools[@]}"; do
+        if ! dpkg -l | grep -q "^ii  $tool "; then
+            print_status "Installing $tool..."
+            sudo apt install -y "$tool" || print_warning "Failed to install $tool"
+        else
+            print_status "$tool already installed"
         fi
-        
-        # Install bat for better file viewing
-        if ! command_exists "bat" && ! command_exists "batcat"; then
-            print_status "Installing bat for enhanced file viewing..."
-            sudo apt install -y bat || print_warning "Failed to install bat"
-        fi
-        
-    elif command_exists "yum"; then
-        for tool in "${tools[@]}"; do
-            if ! rpm -q "$tool" &>/dev/null; then
-                print_status "Installing $tool..."
-                sudo yum install -y "$tool" || print_warning "Failed to install $tool"
-            fi
-        done
-    else
-        print_warning "Could not auto-install tools. Please install manually: ${tools[*]}"
+    done
+    
+    # Install wordlists
+    if [ ! -d "/usr/share/wordlists" ]; then
+        print_status "Installing wordlists..."
+        sudo apt install -y wordlists || print_warning "Failed to install wordlists"
     fi
     
     print_success "Basic tools installation completed"
 }
 
+# Install modern tools
+install_modern_tools() {
+    print_status "Installing modern security tools..."
+    
+    # Install ffuf (fast web fuzzer)
+    if ! command_exists "ffuf"; then
+        print_status "Installing ffuf..."
+        local temp_dir=$(mktemp -d)
+        cd "$temp_dir"
+        wget -q https://github.com/ffuf/ffuf/releases/latest/download/ffuf_2.1.0_linux_amd64.tar.gz
+        tar -xzf ffuf_2.1.0_linux_amd64.tar.gz
+        sudo mv ffuf /usr/local/bin/
+        cd - > /dev/null
+        rm -rf "$temp_dir"
+        print_success "ffuf installed"
+    fi
+    
+    # Install feroxbuster (recursive directory scanner)
+    if ! command_exists "feroxbuster"; then
+        print_status "Installing feroxbuster..."
+        local temp_dir=$(mktemp -d)
+        cd "$temp_dir"
+        wget -q https://github.com/epi052/feroxbuster/releases/latest/download/x86_64-linux-feroxbuster.zip
+        unzip -q x86_64-linux-feroxbuster.zip
+        sudo mv feroxbuster /usr/local/bin/
+        cd - > /dev/null
+        rm -rf "$temp_dir"
+        print_success "feroxbuster installed"
+    fi
+    
+    print_success "Modern tools installation completed"
+}
+
+# Install neofetch from specific release version
+install_neofetch() {
+    if ! command_exists "neofetch"; then
+        print_status "Installing neofetch v7.1.0..."
+        
+        # Create temp directory
+        local temp_dir=$(mktemp -d)
+        cd "$temp_dir"
+        
+        # Download specific release version 7.1.0
+        if curl -sL "https://github.com/dylanaraps/neofetch/archive/refs/tags/7.1.0.zip" -o neofetch.zip && unzip -q neofetch.zip; then
+            cd neofetch-7.1.0
+            sudo make install
+            print_success "Neofetch v7.1.0 installed successfully!"
+        else
+            print_error "Failed to download neofetch v7.1.0"
+        fi
+        
+        # Clean up
+        cd - > /dev/null
+        rm -rf "$temp_dir"
+    else
+        print_success "Neofetch already installed"
+    fi
+}
+
 # Setup cybersecurity environment
 setup_environment() {
-    print_status "Setting up cybersecurity environment..."
+    print_status "Setting up enhanced cybersecurity environment..."
     
     # Create directory structure
-    mkdir -p "$HOME/cybersec"/{scans,exploits,loot,notes,scripts,tools,wordlists,reports}
+    mkdir -p "$HOME/cybersec"/{scans,exploits,loot,notes,scripts,tools,wordlists,reports,targets}
     mkdir -p "$HOME/cybersec/scans"/{nmap,web,vuln}
     mkdir -p "$HOME/cybersec/reports"/{daily,final}
     mkdir -p "$HOME/cybersec/notes"/{targets,methodology,findings}
@@ -255,7 +286,7 @@ nc -lvnp $port
 EOF
     chmod +x "$HOME/cybersec/scripts/listener.sh"
     
-    # Create quick scan script
+    # Create quick recon script
     cat > "$HOME/cybersec/scripts/quick-recon.sh" << 'EOF'
 #!/bin/bash
 # Quick reconnaissance script
@@ -265,14 +296,14 @@ if [ -z "$target" ]; then
     exit 1
 fi
 
-echo "🎯 Quick reconnaissance for $target"
+echo "Quick reconnaissance for $target"
 mkdir -p "recon_$target"
 cd "recon_$target"
 
-echo "🔍 Port scanning..."
+echo "Port scanning..."
 nmap -sC -sV $target -oA nmap_scan
 
-echo "🌐 Web enumeration..."
+echo "Web enumeration..."
 if nmap -p 80,443 $target | grep -q "open"; then
     whatweb $target > whatweb.txt 2>/dev/null || true
     if [ -f /usr/share/wordlists/dirb/common.txt ]; then
@@ -280,7 +311,7 @@ if nmap -p 80,443 $target | grep -q "open"; then
     fi
 fi
 
-echo "✅ Reconnaissance complete - check recon_$target directory"
+echo "Reconnaissance complete - check recon_$target directory"
 EOF
     chmod +x "$HOME/cybersec/scripts/quick-recon.sh"
     
@@ -352,87 +383,22 @@ EOF
 EOF
     chmod 600 "$HOME/.config/cybersec/api_keys.env"
     
-    print_success "Cybersecurity environment setup completed"
+    print_success "Enhanced cybersecurity environment setup completed"
 }
 
-# Create uninstaller
-create_uninstaller() {
-    cat > "$HOME/.wslkali_uninstall.sh" << 'EOF'
-#!/bin/bash
-# WSL Kali Setup Uninstaller
-
-echo "🗑️ WSL Kali Cybersecurity Configuration Uninstaller"
-echo "===================================================="
-echo ""
-
-read -p "Are you sure you want to uninstall WSL Kali configuration? (y/N): " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo "Uninstall cancelled."
-    exit 1
-fi
-
-# Find backup directory
-BACKUP_DIR=$(find "$HOME" -maxdepth 1 -name ".wslkali_backup_*" -type d | head -1)
-
-if [ -n "$BACKUP_DIR" ] && [ -d "$BACKUP_DIR" ]; then
-    echo "Restoring from backup: $BACKUP_DIR"
-    
-    if [ -f "$BACKUP_DIR/zshrc.backup" ]; then
-        cp "$BACKUP_DIR/zshrc.backup" "$HOME/.zshrc"
-        echo "✅ Restored .zshrc"
-    fi
-    
-    if [ -d "$BACKUP_DIR/oh-my-zsh.backup" ]; then
-        rm -rf "$HOME/.oh-my-zsh"
-        cp -r "$BACKUP_DIR/oh-my-zsh.backup" "$HOME/.oh-my-zsh"
-        echo "✅ Restored oh-my-zsh"
-    fi
-else
-    echo "⚠️ No backup found. Removing WSL Kali configuration..."
-    rm -f "$HOME/.zshrc"
-    
-    if [ -f "$HOME/.zshrc.old" ]; then
-        mv "$HOME/.zshrc.old" "$HOME/.zshrc"
-        echo "✅ Restored previous .zshrc"
-    fi
-fi
-
-# Remove cybersec directory (with confirmation)
-if [ -d "$HOME/cybersec" ]; then
-    read -p "Remove cybersec directory? This will delete all your work! (y/N): " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        rm -rf "$HOME/cybersec"
-        echo "✅ Removed cybersec directory"
-    fi
-fi
-
-# Remove API config
-rm -rf "$HOME/.config/cybersec"
-
-# Remove this uninstaller
-rm -f "$HOME/.wslkali_uninstall.sh"
-
-echo ""
-echo "🗑️ WSL Kali uninstallation completed"
-echo "Please restart your terminal or run: source ~/.zshrc"
-EOF
-    
-    chmod +x "$HOME/.wslkali_uninstall.sh"
-    print_success "Uninstaller created at ~/.wslkali_uninstall.sh"
-}
-
-# Install Go tools (optional)
+# Install Go-based security tools
 install_go_tools() {
     print_status "Installing Go-based security tools..."
     
     # Check if Go is installed
     if ! command_exists "go"; then
         print_status "Installing Go programming language..."
+        local temp_dir=$(mktemp -d)
+        cd "$temp_dir"
         wget -q https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
         sudo tar -C /usr/local -xzf go1.21.5.linux-amd64.tar.gz
-        rm go1.21.5.linux-amd64.tar.gz
+        cd - > /dev/null
+        rm -rf "$temp_dir"
         export PATH=$PATH:/usr/local/go/bin
         echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.zshrc
     fi
@@ -455,16 +421,87 @@ install_go_tools() {
     print_success "Go tools installation completed"
 }
 
+# Create uninstaller
+create_uninstaller() {
+    cat > "$HOME/.wslkali_uninstall.sh" << 'EOF'
+#!/bin/bash
+# WSL Kali Setup Uninstaller
+
+echo "WSL Kali Cybersecurity Configuration Uninstaller"
+echo "================================================"
+echo ""
+
+read -p "Are you sure you want to uninstall WSL Kali configuration? (y/N): " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Uninstall cancelled."
+    exit 1
+fi
+
+# Find backup directory
+BACKUP_DIR=$(find "$HOME" -maxdepth 1 -name ".wslkali_backup_*" -type d | head -1)
+
+if [ -n "$BACKUP_DIR" ] && [ -d "$BACKUP_DIR" ]; then
+    echo "Restoring from backup: $BACKUP_DIR"
+    
+    if [ -f "$BACKUP_DIR/zshrc.backup" ]; then
+        cp "$BACKUP_DIR/zshrc.backup" "$HOME/.zshrc"
+        echo "Restored .zshrc"
+    fi
+    
+    if [ -d "$BACKUP_DIR/oh-my-zsh.backup" ]; then
+        rm -rf "$HOME/.oh-my-zsh"
+        cp -r "$BACKUP_DIR/oh-my-zsh.backup" "$HOME/.oh-my-zsh"
+        echo "Restored oh-my-zsh"
+    fi
+else
+    echo "No backup found. Removing WSL Kali configuration..."
+    rm -f "$HOME/.zshrc"
+    
+    if [ -f "$HOME/.zshrc.old" ]; then
+        mv "$HOME/.zshrc.old" "$HOME/.zshrc"
+        echo "Restored previous .zshrc"
+    fi
+fi
+
+# Remove cybersec directory (with confirmation)
+if [ -d "$HOME/cybersec" ]; then
+    read -p "Remove cybersec directory? This will delete all your work! (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        rm -rf "$HOME/cybersec"
+        echo "Removed cybersec directory"
+    fi
+fi
+
+# Remove API config
+rm -rf "$HOME/.config/cybersec"
+
+# Remove this uninstaller
+rm -f "$HOME/.wslkali_uninstall.sh"
+
+echo ""
+echo "WSL Kali uninstallation completed"
+echo "Please restart your terminal or run: source ~/.zshrc"
+EOF
+    
+    chmod +x "$HOME/.wslkali_uninstall.sh"
+    print_success "Uninstaller created at ~/.wslkali_uninstall.sh"
+}
+
 # Main installation function
 main() {
-    echo "🛡️ WSL Kali Setup - Cybersecurity Configuration Installer"
-    echo "=========================================================="
+    echo "WSL Kali Setup - Cybersecurity Configuration Installer"
+    echo "=============================================================="
     echo ""
     echo "This installer will:"
     echo "• Install Oh My Zsh and required plugins"
-    echo "• Install WSL Kali cybersecurity configuration"
-    echo "• Setup cybersecurity workspace"
-    echo "• Install basic penetration testing tools"
+    echo "• Install enhanced WSL Kali cybersecurity configuration"
+    echo "• Setup comprehensive cybersecurity workspace"
+    echo "• Install modern penetration testing tools"
+    echo "• Install neofetch with system information display"
+    echo "• Create organized directory structure"
+    echo "• Setup API key management"
     echo "• Create backup of existing configuration"
     echo ""
     
@@ -482,6 +519,8 @@ main() {
     install_zsh_plugins
     install_configuration
     install_basic_tools
+    install_modern_tools
+    install_neofetch
     setup_environment
     set_default_shell
     create_uninstaller
@@ -495,21 +534,29 @@ main() {
     fi
     
     echo ""
-    echo "🎉 WSL Kali Setup Installation Completed!"
-    echo "========================================"
+    echo "WSL Kali Setup Installation Completed!"
+    echo "============================================="
     echo ""
-    echo "📁 Backup created at: $BACKUP_DIR"
-    echo "🗑️ Uninstaller available at: ~/.wslkali_uninstall.sh"
+    echo "Backup created at: $BACKUP_DIR"
+    echo "Uninstaller available at: ~/.wslkali_uninstall.sh"
     echo ""
-    echo "🚀 Next steps:"
+    echo "New Features Available:"
+    echo "• Complete workflow automation with 'full_recon <target>'"
+    echo "• CVE lookup with 'cve_lookup <CVE-ID>'"
+    echo "• Metasploit integration with 'msf' and 'msf_payload'"
+    echo "• Custom wordlist management"
+    echo "• Modern tools: ffuf, feroxbuster, masscan"
+    echo "• Comprehensive aliases - use 'show_aliases' to see all"
+    echo ""
+    echo "Next steps:"
     echo "1. Restart your terminal or run: source ~/.zshrc"
-    echo "2. Run: setup-cybersec (to initialize environment)"
-    echo "3. Run: install-pentest-tools (for additional tools)"
-    echo "4. Run: cybersec-help (for usage information)"
+    echo "2. Run: setup-cybersec (if not auto-completed)"
+    echo "3. Run: cybersec-help (for detailed usage information)"
+    echo "4. Run: show_aliases (to see all available shortcuts)"
     echo "5. Edit ~/.config/cybersec/api_keys.env (to add your API keys)"
     echo ""
-    echo "📖 Documentation: https://github.com/cyb0rgdoll/wslkalisetup"
-    echo "🐛 Issues: https://github.com/cyb0rgdoll/wslkalisetup/issues"
+    echo "Documentation: https://github.com/cyb0rgdoll/wslkalisetup"
+    echo "Issues: https://github.com/cyb0rgdoll/wslkalisetup/issues"
     echo ""
     
     # Ask if user wants to restart shell now
@@ -523,7 +570,7 @@ main() {
 # Handle script arguments
 case "${1:-}" in
     "--help"|"-h")
-        echo "WSL Kali Setup - Cybersecurity Configuration Installer"
+        echo "WSL Kali Setup - Enhanced Cybersecurity Configuration Installer"
         echo ""
         echo "Usage: $0 [options]"
         echo ""
@@ -555,7 +602,7 @@ esac
 
 # Unattended installation function
 unattended_install() {
-    echo "🤖 Running unattended installation..."
+    echo "Running unattended installation..."
     
     create_backup
     check_requirements
@@ -565,6 +612,8 @@ unattended_install() {
     
     if [[ "$NO_TOOLS" != "true" ]]; then
         install_basic_tools
+        install_modern_tools
+        install_neofetch
     fi
     
     setup_environment
@@ -575,7 +624,7 @@ unattended_install() {
         install_go_tools
     fi
     
-    echo "✅ Unattended installation completed successfully!"
+    echo "Unattended installation completed successfully!"
 }
 
 # Run appropriate installation
