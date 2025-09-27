@@ -29,17 +29,24 @@
 - Oh-My-Zsh (will be prompted to install if missing)
 
 ### Quick Install
+```bash
 curl -fsSL https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/install.sh | bash
 
 # Download the installer
+```bash
 wget https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/install.sh
 chmod +x install.sh
 
-# Run with options
-./install.sh                    # Interactive installation
-./install.sh --unattended      # Automated installation  
-./install.sh --no-tools        # Config only, no tools
-./install.sh --help            # Show help
+### Run with options
+```bash
+# Interactive installation
+./install.sh   
+ # Automated installation  
+./install.sh --unattended     
+# Config only, no tools
+./install.sh --no-tools       
+ # Show help
+./install.sh --help         
 
 ### First-time Setup
 ```bash
