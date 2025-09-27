@@ -2,7 +2,7 @@
 # WSL Kali Setup - Cybersecurity Configuration
 # =====================================
 # 
-# A clean, tested Zsh configuration for cybersecurity professionals
+# A clean, tested Zsh configuration for cybersecurity professionals / students / penetration testers 
 # GitHub: https://github.com/cyb0rgdoll/wslkalisetup
 # License: GPL-3.0
 #
