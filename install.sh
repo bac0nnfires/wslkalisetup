@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# WSL Kali Setup - Cybersecurity Configuration Installer
+# WSL Kali Setup - Enhanced Cybersecurity Configuration Installer
 # ==============================================================
 
 set -e
@@ -186,7 +186,7 @@ install_basic_tools() {
         "nmap" "gobuster" "nikto" "whatweb" "curl" "wget" "git"
         "enum4linux" "smbclient" "netcat-openbsd" "xclip" "tree" "jq"
         "make" "unzip" "masscan" "amass" "metasploit-framework"
-        "python3-pip" "searchsploit"
+        "python3-pip"
     )
     
     for tool in "${tools[@]}"; do
@@ -207,7 +207,44 @@ install_basic_tools() {
     print_success "Basic tools installation completed"
 }
 
-# Install modern tools
+# Install exploitdb/searchsploit (optional)
+install_exploitdb() {
+    print_status "Installing ExploitDB and searchsploit..."
+    
+    # Try different installation methods
+    if apt-cache show exploitdb >/dev/null 2>&1; then
+        sudo apt install -y exploitdb
+        print_success "ExploitDB installed via package manager"
+    elif apt-cache show searchsploit >/dev/null 2>&1; then
+        sudo apt install -y searchsploit
+        print_success "searchsploit installed via package manager"
+    else
+        print_status "Installing ExploitDB from source..."
+        local temp_dir=$(mktemp -d)
+        cd "$temp_dir"
+        
+        if git clone https://github.com/offensive-security/exploitdb.git; then
+            sudo mkdir -p /opt/exploitdb
+            sudo cp -r exploitdb/* /opt/exploitdb/
+            sudo ln -sf /opt/exploitdb/searchsploit /usr/local/bin/searchsploit
+            sudo chmod +x /usr/local/bin/searchsploit
+            print_success "ExploitDB installed from source"
+        else
+            print_error "Failed to install ExploitDB"
+        fi
+        
+        cd - > /dev/null
+        rm -rf "$temp_dir"
+    fi
+    
+    # Update database if successful
+    if command_exists "searchsploit"; then
+        print_status "Updating ExploitDB database..."
+        searchsploit -u || print_warning "Failed to update ExploitDB database"
+    fi
+}
+
+# Install modern high-performance tools
 install_modern_tools() {
     print_status "Installing modern security tools..."
     
@@ -491,7 +528,7 @@ EOF
 
 # Main installation function
 main() {
-    echo "WSL Kali Setup - Cybersecurity Configuration Installer"
+    echo "WSL Kali Setup - Enhanced Cybersecurity Configuration Installer"
     echo "=============================================================="
     echo ""
     echo "This installer will:"
@@ -533,8 +570,16 @@ main() {
         install_go_tools
     fi
     
+    # Ask about ExploitDB
     echo ""
-    echo "WSL Kali Setup Installation Completed!"
+    read -p "Install ExploitDB and searchsploit? (Y/n): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+        install_exploitdb
+    fi
+    
+    echo ""
+    echo "WSL Kali Enhanced Setup Installation Completed!"
     echo "============================================="
     echo ""
     echo "Backup created at: $BACKUP_DIR"
@@ -622,6 +667,7 @@ unattended_install() {
     
     if [[ "$NO_GO" != "true" && "$NO_TOOLS" != "true" ]]; then
         install_go_tools
+        install_exploitdb
     fi
     
     echo "Unattended installation completed successfully!"
