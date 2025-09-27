@@ -4,6 +4,7 @@
 # 
 # A clean, tested Zsh configuration for cybersecurity professionals
 # GitHub: https://github.com/cyb0rgdoll/wslkalisetup
+# License: GPL-3.0
 #
 # =====================================
 
@@ -87,7 +88,12 @@ get_local_ip() {
 # =====================================
 
 cybersec_banner() {
-    echo ""
+    # Show neofetch if available
+    if command -v neofetch &> /dev/null; then
+        neofetch --config none --ascii_distro kali --colors 4 7 --bold off
+        echo ""
+    fi
+    
     echo "🛡️  WSL KALI CYBERSECURITY ENVIRONMENT"
     echo "📡 Local IP: $(get_local_ip)"
     echo "👤 User: $(whoami)"
@@ -546,6 +552,7 @@ install-pentest-tools() {
     local tools=(
         "nmap" "gobuster" "nikto" "whatweb" "curl" "wget" "git"
         "enum4linux" "smbclient" "netcat-openbsd" "xclip" "tree" "jq"
+        "make" "unzip"  # Required for neofetch compilation and extraction
     )
     
     for tool in "${tools[@]}"; do
@@ -557,7 +564,36 @@ install-pentest-tools() {
         fi
     done
     
+    # Install neofetch from source since it's not in repos
+    install-neofetch
+    
     echo "✅ Basic tools installation complete!"
+}
+
+# Install neofetch from specific release version
+install-neofetch() {
+    if ! command -v neofetch &> /dev/null; then
+        echo "📦 Installing neofetch v7.1.0..."
+        
+        # Create temp directory
+        local temp_dir=$(mktemp -d)
+        cd "$temp_dir"
+        
+        # Download specific release version 7.1.0
+        if curl -sL "https://github.com/dylanaraps/neofetch/archive/refs/tags/7.1.0.zip" -o neofetch.zip && unzip -q neofetch.zip; then
+            cd neofetch-7.1.0
+            sudo make install
+            echo "✅ Neofetch v7.1.0 installed successfully!"
+        else
+            echo "❌ Failed to download neofetch v7.1.0"
+        fi
+        
+        # Clean up
+        cd ~
+        rm -rf "$temp_dir"
+    else
+        echo "✅ Neofetch already installed"
+    fi
 }
 
 # Install Go-based tools
