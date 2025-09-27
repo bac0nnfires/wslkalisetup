@@ -35,16 +35,15 @@ curl -fsSL https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/instal
 ### Or Manual Install / Run with Options
 ```bash
 wget https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/install.sh
-
 chmod +x install.sh
-./install.sh   
- # Automated installation  
+```
+# Automated installation  
 ./install.sh --unattended     
 # Config only, no tools
 ./install.sh --no-tools       
- # Show help
+# Show help
 ./install.sh --help
-```
+
 ### First-time Setup       
 ```bash
 # Initialize the cybersecurity environment
