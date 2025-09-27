@@ -1,5 +1,8 @@
 # 🛡️WSL Kali Setup - Cybersecurity Configuration 
 
+# One-liner installation
+curl -fsSL https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/wslscript.sh | bash
+
 ## 🚀 Features
 
 ### Core Functionality
@@ -35,11 +38,8 @@
 # Backup your current configuration
 cp ~/.zshrc ~/.zshrc.backup
 
-# Download and install
-curl -fsSL https://github.com/cyb0rgdoll/wslsetupscript/blob/88d55508962eeab3de96dc2b1fa1d08ec1945577/wslscript.sh | bash
-
-wget https://github.com/cyb0rgdoll/wslsetupscript
-```
+# One-liner installation
+curl -fsSL https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/wslscript.sh | bash
 
 ### First-time Setup
 ```bash
