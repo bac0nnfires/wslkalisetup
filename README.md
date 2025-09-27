@@ -36,13 +36,11 @@ curl -fsSL https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/instal
 ```bash
 wget https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/install.sh
 chmod +x install.sh
-```
-# Automated installation  
+  
 ./install.sh --unattended     
-# Config only, no tools
 ./install.sh --no-tools       
-# Show help
 ./install.sh --help
+```
 
 ### First-time Setup       
 ```bash
