@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# WSL Kali Setup - Enhanced Cybersecurity Configuration Installer
+# WSL Kali Setup - Cybersecurity Configuration Installer
 # ==============================================================
 
 set -e
