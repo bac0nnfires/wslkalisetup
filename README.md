@@ -1,11 +1,8 @@
 # 🛡️WSL Kali Setup - Cybersecurity Configuration 
 
-# One-liner installation
-curl -fsSL https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/wslscript.sh | bash
+### 🚀 Features
 
-## 🚀 Features
-
-### Core Functionality
+### Functionality
 - **Automated Reconnaissance**: Network discovery, port scanning, service enumeration
 - **Web Application Testing**: Comprehensive web security assessment tools
 - **Payload Generation**: Multiple reverse shell and exploit payload generators
@@ -18,8 +15,6 @@ curl -fsSL https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/wslscr
 - **Subdomain Enumeration**: Multiple tool integration (subfinder, assetfinder)
 - **Vulnerability Assessment**: Automated vulnerability scanning workflows
 - **Encoding/Decoding**: Built-in utilities for common encoding schemes
-
-### Quality of Life Improvements
 - **Enhanced History**: Advanced command history with deduplication
 - **Smart Completion**: Intelligent auto-completion for security tools
 - **Quick Navigation**: Fast workspace and directory switching
@@ -34,12 +29,17 @@ curl -fsSL https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/wslscr
 - Oh-My-Zsh (will be prompted to install if missing)
 
 ### Quick Install
-```bash
-# Backup your current configuration
-cp ~/.zshrc ~/.zshrc.backup
+curl -fsSL https://raw.githubusercontent.com/cyborgdoll/wslkalisetup/main/install.sh | bash
 
-# One-liner installation
-curl -fsSL https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/wslscript.sh | bash
+# Download the installer
+wget https://raw.githubusercontent.com/cyborgdoll/wslkalisetup/main/install.sh
+chmod +x install.sh
+
+# Run with options
+./install.sh                    # Interactive installation
+./install.sh --unattended      # Automated installation  
+./install.sh --no-tools        # Config only, no tools
+./install.sh --help            # Show help
 
 ### First-time Setup
 ```bash
