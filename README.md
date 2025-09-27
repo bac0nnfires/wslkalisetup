@@ -29,10 +29,10 @@
 - Oh-My-Zsh (will be prompted to install if missing)
 
 ### Quick Install
-curl -fsSL https://raw.githubusercontent.com/cyborgdoll/wslkalisetup/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/install.sh | bash
 
 # Download the installer
-wget https://raw.githubusercontent.com/cyborgdoll/wslkalisetup/main/install.sh
+wget https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/install.sh
 chmod +x install.sh
 
 # Run with options
