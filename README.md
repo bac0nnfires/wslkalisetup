@@ -2,15 +2,15 @@
 
 <img width="450" height="400" alt="image" src="https://github.com/user-attachments/assets/610cc583-a541-49d7-8a65-1196b76f9047" />
 
-### 🚀 Features 🚀
-### Functionality 
+## 🚀 Features 🚀
+Functionality 
 - **Automated Reconnaissance**: Network discovery, port scanning, service enumeration
 - **Web Application Testing**: Comprehensive web security assessment tools
 - **Payload Generation**: Multiple reverse shell and exploit payload generators
 - **File Management**: Enhanced file viewing and copying utilities
 - **Environment Setup**: Organized workspace for security testing projects
 
-### Advanced Tools Integration
+Advanced Tools Integration
 - **Network Scanning**: Nmap integration with custom profiles
 - **Web Testing**: Gobuster, Nikto, whatweb automation
 - **Subdomain Enumeration**: Multiple tool integration (subfinder, assetfinder)
@@ -24,7 +24,7 @@
 
 ## 📦 Installation 📦
 
-### Prerequisites
+Prerequisites
 - WSL / Linux-based system (Kali, Ubuntu, Debian recommended)
 - Zsh shell
 - Oh-My-Zsh (will be prompted to install if missing)
@@ -33,7 +33,7 @@
 ```bash
 curl -fsSL https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/install.sh | bash
 ```
-### Or Manual Install / Run with Options
+Or Manual Install / Run with Options
 ```bash
 wget https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/install.sh
 chmod +x install.sh
@@ -43,7 +43,7 @@ chmod +x install.sh
 ./install.sh --help
 ```
 
-### First-time Setup       
+First-time Setup       
 ```bash
 # Initialize the cybersecurity environment
 setup-cybersec
@@ -61,9 +61,7 @@ install-python-tools
 setup_api_keys
 ```
 
-## 🛠️ Usage 🛠️
-
-### Quick Start Commands
+## 🛠️ Usage 🛠️ - Quick Start Commands
 
 #### Network Reconnaissance
 ```bash
@@ -117,8 +115,6 @@ copylines logfile.txt 100 200
 # Copy to clipboard
 toclip important.txt
 ```
-
-### Advanced Features
 
 #### Automated Reconnaissance
 ```bash
