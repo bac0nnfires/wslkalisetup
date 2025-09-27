@@ -5,277 +5,115 @@
 
 
 ## 🚀 Features 🚀
-Functionality 
+Functionality and Advanced Tools Integration
 - **Automated Reconnaissance**: Network discovery, port scanning, service enumeration
 - **Web Application Testing**: Comprehensive web security assessment tools
 - **Payload Generation**: Multiple reverse shell and exploit payload generators
 - **File Management**: Enhanced file viewing and copying utilities
 - **Environment Setup**: Organized workspace for security testing projects
-
-Advanced Tools Integration
 - **Network Scanning**: Nmap integration with custom profiles
-- **Web Testing**: Gobuster, Nikto, whatweb automation
+- **Web testing and modern Tools**: Gobuster, Nikto, whatweb automation, ffuf, feroxbuster, masscan, metasploit integration
 - **Subdomain Enumeration**: Multiple tool integration (subfinder, assetfinder)
 - **Vulnerability Assessment**: Automated vulnerability scanning workflows
 - **Encoding/Decoding**: Built-in utilities for common encoding schemes
 - **Enhanced History**: Advanced command history with deduplication
 - **Smart Completion**: Intelligent auto-completion for security tools
 - **Quick Navigation**: Fast workspace and directory switching
-- **Copy/Paste Optimization**: Better terminal text handling
-- **Colour-coded Output**: Enhanced readability for scan results
+- **Automated Workflows**: `full_recon <target>` for complete reconnaissance
+- **CVE Database**: `cve_lookup CVE-2021-44228` and exploit search
+- **Smart Aliases**: 40+ shortcuts for common tasks
+- **Organized Workspace**: Structured directories for scans, loot, reports
+- **Enhanced Terminal**: Better history, completion, file operations
 
 ## 📦 Installation 📦
 
-Prerequisites
-- WSL / Linux-based system (Kali, Ubuntu, Debian recommended)
-- Zsh shell
-- Oh-My-Zsh (will be prompted to install if missing)
+## Requirements
+- Linux system (WSL, Kali, Ubuntu, Debian)
+- Zsh shell (auto-installed)
 
 ### Quick Install
 ```bash
 curl -fsSL https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/install.sh | bash
 ```
-Or Manual Install / Run with Options
+
+### Options
 ```bash
-wget https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/install.sh
-chmod +x install.sh
-  
-./install.sh --unattended     
-./install.sh --no-tools       
-./install.sh --help
+./install.sh --unattended    # No prompts
+./install.sh --no-tools      # Config only
+./install.sh --help          # Show options
 ```
 
-First-time Setup       
+## Quick Usage
+
 ```bash
-# Initialize the cybersecurity environment
-setup-cybersec
-
-# Install common penetration testing tools
-install-pentest-tools
-
-# Install Go-based security tools (optional)
-install-go-tools
-
-# Install Python security tools (optional)
-install-python-tools
-
-# Setup API keys (optional)
-setup_api_keys
-```
-
-## 🛠️ Usage 🛠️ - Quick Start Commands
-
-#### Network Reconnaissance
-```bash
-# Discover live hosts on a network
+# Network reconnaissance
 discover 192.168.1.0/24
-
-# Quick target scan
 quickscan 192.168.1.100
+full_recon example.com
 
-# Detailed port scanning
-portscan 192.168.1.100 1-10000
-
-# Vulnerability enumeration
-enum 192.168.1.100
-```
-
-#### Web Application Testing
-```bash
-# Comprehensive web testing
+# Web testing
 webtest https://example.com
+ff -u https://example.com/FUZZ -w wordlist.txt
 
-# Domain reconnaissance
-recon-domain example.com
-
-# Start local HTTP server
-serve 8080
-```
-
-#### Payload Generation
-```bash
-# Generate reverse shells
+# Payload generation
 payload bash 4444
-payload python 4444
-payload powershell 4444
-
-# Start listener with payloads
+msf_payload linux 4444
 revshell 4444
+
+# Vulnerability research
+cve_lookup CVE-2021-44228
+exploit_search "apache struts"
+
+# View all shortcuts
+show_aliases
+cybersec-help
 ```
 
-#### File Operations
-```bash
-# View file with line numbers
-viewfile script.sh
+## Tools Installed
 
-# Copy file content (plain text)
-copytext config.txt
+**Core**: nmap, gobuster, nikto, whatweb, enum4linux, metasploit-framework  
+**Modern**: ffuf, feroxbuster, masscan, amass  
+**Go Tools**: subfinder, httpx, nuclei (optional)  
+**Utilities**: neofetch, searchsploit, custom wordlist management
 
-# Extract specific lines
-copylines logfile.txt 100 200
-
-# Copy to clipboard
-toclip important.txt
-```
-
-#### Automated Reconnaissance
-```bash
-# Full automated recon pipeline
-autorecon target.com
-
-# SMB enumeration
-smbenum 192.168.1.100
-
-# Monitor network traffic
-monitor eth0
-```
-
-#### Encoding/Decoding
-```bash
-# Encode data
-encode base64 "hello world"
-encode url "special chars &"
-encode hex "binary data"
-
-# Decode data
-decode base64 "aGVsbG8gd29ybGQ="
-decode url "special%20chars%20%26"
-```
-
-#### Utilities
-```bash
-# Network information
-myip
-
-# Generate passwords
-genpass 16 5
-
-# Quick port check
-ports 192.168.1.1
-
-# Vulnerability check
-vulncheck 192.168.1.100
-```
-
-## 📁 Directory Structure 📁
-
-After running `setup-cybersec`, your workspace will be organized as:
+## Directory Structure
 
 ```
 ~/cybersec/
-├── scans/               # Scan results
-│   ├── nmap/           # Nmap scans
-│   ├── web/            # Web scans
-│   └── vuln/           # Vulnerability scans
-├── exploits/           # Exploit code and payloads
-├── loot/               # Extracted data and credentials
-├── notes/              # Documentation and findings
-│   ├── targets/        # Target-specific notes
-│   ├── methodology/    # Testing methodologies
-│   └── findings/       # Vulnerability findings
-├── scripts/            # Custom scripts
-├── tools/              # Additional tools
-├── wordlists/          # Custom wordlists
-└── reports/            # Final reports
-    ├── daily/          # Daily progress reports
-    └── final/          # Final assessment reports
+├── scans/      # Scan results
+├── loot/       # Extracted data
+├── reports/    # Assessment reports
+├── scripts/    # Custom tools
+└── wordlists/  # Custom wordlists
 ```
 
-## ⚙️ Configuration
+## Configuration
 
-### API Keys Setup
+**API Keys**: Edit `~/.config/cybersec/api_keys.env`  
+**Customization**: Modify `~/.zshrc` sections as needed  
+**Help**: Run `cybersec-help` for detailed usage
+
+## Troubleshooting
+
 ```bash
-# Create API keys configuration
-setup_api_keys
+# Test syntax
+zsh -n ~/.zshrc
 
-# Edit the configuration file
-nano ~/.config/cybersec/api_keys.env
+# Reinstall tools
+install-pentest-tools
+
+# Restore backup
+cp ~/.zshrc.old ~/.zshrc
 ```
 
-### Customization
-The configuration is modular and can be customized by editing `~/.zshrc`. Key sections:
+## Uninstall
 
-- **Core Functions**: Main security testing functions
-- **File Operations**: Enhanced file handling
-- **Network Tools**: Scanning and enumeration
-- **Payload Generation**: Exploit and shell generation
-- **Utilities**: Helper functions and tools
-
-### Environment Variables
 ```bash
-# Customize your attack IP (default: auto-detected)
-export ATTACK_IP="10.10.10.100"
-
-# Set default ports
-export DEFAULT_LISTENER_PORT="4444"
-
-# Custom wordlist paths
-export CUSTOM_WORDLIST="/path/to/wordlist.txt"
-```
-
-## 🔧 Tool Integration
-
-### Supported Tools
-- **Network**: nmap, masscan, zmap
-- **Web**: gobuster, dirb, nikto, whatweb, sqlmap
-- **Enumeration**: enum4linux, smbclient, ldapsearch
-- **Exploitation**: metasploit, john, hashcat, hydra
-- **Reconnaissance**: subfinder, assetfinder, amass, httprobe
-- **Analysis**: wireshark, tcpdump, burp suite
-
-### Installation Scripts
-The configuration includes automated installation for:
-- Core penetration testing tools (APT packages)
-- Go-based security tools (subfinder, httpx, nuclei)
-- Python security libraries (impacket, crackmapexec)
-
-## 📚 COMMAND EXAMPLES 📚
-
-### Penetration Testing Workflow
-```bash
-# 1. Setup environment
-setup-cybersec
-cd ~/cybersec
-
-# 2. Network discovery
-discover 192.168.1.0/24
-
-# 3. Target scanning
-quickscan 192.168.1.100
-
-# 4. Web application testing
-webtest http://192.168.1.100
-
-# 5. Generate payloads if needed
-payload bash 4444
-
-# 6. Document findings
-cd notes/targets
-nano 192.168.1.100.md
-```
-
-### Bug Bounty Workflow
-```bash
-# 1. Domain reconnaissance
-recon-domain target.com
-
-# 2. Subdomain enumeration
-subfinder -d target.com | httpx -silent
-
-# 3. Web technology detection
-webtest https://target.com
-
-# 4. Automated vulnerability scanning
-autorecon target.com
+~/.wslkali_uninstall.sh
 ```
 
 ## ⚠️ Disclaimer
 
 This configuration is designed for authorized security testing only. Users are responsible for ensuring they have proper authorization before using these tools against any systems. The authors are not responsible for any misuse or damage caused by this software, script or code.
 
-## Acknowledgments
-
-- The cybersecurity community for tool development and testing methodologies
-- Oh My Zsh team for the excellent framework
-- ProjectDiscovery for modern security tools
-- All contributors and users providing feedback
+ [GitHub Issues](https://github.com/cyb0rgdoll/wslkalisetup/issues) for support
