@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Cybersecurity Configuration Installer
-# ==============================================
+# WSL Kali Setup - Cybersecurity Configuration Installer
+# ======================================================
 
 set -e
 
@@ -13,8 +13,8 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-REPO_URL="https://github.com/cyb0rgdoll/wslkalisetup/"
-BACKUP_DIR="$HOME/.pandabox_backup_$(date +%Y%m%d_%H%M%S)"
+REPO_URL="https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main"
+BACKUP_DIR="$HOME/.wslkali_backup_$(date +%Y%m%d_%H%M%S)"
 
 # Print colored output
 print_status() {
@@ -140,10 +140,10 @@ install_zsh_plugins() {
 
 # Download and install configuration
 install_configuration() {
-    print_status "Downloading PANDABOX configuration..."
+    print_status "Downloading WSL Kali cybersecurity configuration..."
     
     # Download the main configuration file
-    curl -fsSL "$REPO_URL/.zshrc" -o "$HOME/.zshrc.pandabox"
+    curl -fsSL "$REPO_URL/.zshrc" -o "$HOME/.zshrc.wslkali"
     
     # Backup existing .zshrc if it exists
     if [ -f "$HOME/.zshrc" ]; then
@@ -152,9 +152,9 @@ install_configuration() {
     fi
     
     # Install new configuration
-    mv "$HOME/.zshrc.pandabox" "$HOME/.zshrc"
+    mv "$HOME/.zshrc.wslkali" "$HOME/.zshrc"
     
-    print_success "PANDABOX configuration installed"
+    print_success "WSL Kali cybersecurity configuration installed"
 }
 
 # Set Zsh as default shell
@@ -190,19 +190,40 @@ install_basic_tools() {
         "git"
         "netcat-openbsd"
         "xclip"
+        "enum4linux"
+        "smbclient"
+        "dirb"
+        "python3-pip"
+        "tree"
+        "jq"
     )
     
     if command_exists "apt"; then
         sudo apt update
         for tool in "${tools[@]}"; do
-            if ! command_exists "$tool"; then
+            if ! dpkg -l | grep -q "^ii  $tool "; then
                 print_status "Installing $tool..."
                 sudo apt install -y "$tool" || print_warning "Failed to install $tool"
+            else
+                print_status "$tool already installed"
             fi
         done
+        
+        # Install wordlists
+        if [ ! -d "/usr/share/wordlists" ]; then
+            print_status "Installing wordlists..."
+            sudo apt install -y wordlists || print_warning "Failed to install wordlists"
+        fi
+        
+        # Install bat for better file viewing
+        if ! command_exists "bat" && ! command_exists "batcat"; then
+            print_status "Installing bat for enhanced file viewing..."
+            sudo apt install -y bat || print_warning "Failed to install bat"
+        fi
+        
     elif command_exists "yum"; then
         for tool in "${tools[@]}"; do
-            if ! command_exists "$tool"; then
+            if ! rpm -q "$tool" &>/dev/null; then
                 print_status "Installing $tool..."
                 sudo yum install -y "$tool" || print_warning "Failed to install $tool"
             fi
@@ -233,6 +254,35 @@ echo "Starting listener on port $port..."
 nc -lvnp $port
 EOF
     chmod +x "$HOME/cybersec/scripts/listener.sh"
+    
+    # Create quick scan script
+    cat > "$HOME/cybersec/scripts/quick-recon.sh" << 'EOF'
+#!/bin/bash
+# Quick reconnaissance script
+target=$1
+if [ -z "$target" ]; then
+    echo "Usage: $0 <target>"
+    exit 1
+fi
+
+echo "🎯 Quick reconnaissance for $target"
+mkdir -p "recon_$target"
+cd "recon_$target"
+
+echo "🔍 Port scanning..."
+nmap -sC -sV $target -oA nmap_scan
+
+echo "🌐 Web enumeration..."
+if nmap -p 80,443 $target | grep -q "open"; then
+    whatweb $target > whatweb.txt 2>/dev/null || true
+    if [ -f /usr/share/wordlists/dirb/common.txt ]; then
+        gobuster dir -u http://$target -w /usr/share/wordlists/dirb/common.txt -o gobuster.txt -q
+    fi
+fi
+
+echo "✅ Reconnaissance complete - check recon_$target directory"
+EOF
+    chmod +x "$HOME/cybersec/scripts/quick-recon.sh"
     
     # Create notes template
     cat > "$HOME/cybersec/notes/template.md" << 'EOF'
@@ -273,20 +323,49 @@ EOF
     # Setup API keys directory
     mkdir -p "$HOME/.config/cybersec"
     
+    # Create API keys template
+    cat > "$HOME/.config/cybersec/api_keys.env" << 'EOF'
+# Cybersecurity API Keys Configuration
+# ===================================
+# 
+# Uncomment and add your API keys below:
+
+# Shodan (Internet-connected device search)
+# export SHODAN_API_KEY="your_shodan_api_key_here"
+
+# VirusTotal (File/URL analysis)
+# export VIRUSTOTAL_API_KEY="your_virustotal_api_key_here"
+
+# SecurityTrails (DNS/IP intelligence)
+# export SECURITYTRAILS_API_KEY="your_securitytrails_api_key_here"
+
+# Censys (Internet scanning)
+# export CENSYS_API_ID="your_censys_api_id_here"
+# export CENSYS_API_SECRET="your_censys_api_secret_here"
+
+# GitHub (for tool downloads)
+# export GITHUB_TOKEN="your_github_token_here"
+
+# Project Discovery (Nuclei, Subfinder, etc.)
+# export PROJECT_DISCOVERY_API_KEY="your_pd_api_key_here"
+
+EOF
+    chmod 600 "$HOME/.config/cybersec/api_keys.env"
+    
     print_success "Cybersecurity environment setup completed"
 }
 
 # Create uninstaller
 create_uninstaller() {
-    cat > "$HOME/.pandabox_uninstall.sh" << 'EOF'
+    cat > "$HOME/.wslkali_uninstall.sh" << 'EOF'
 #!/bin/bash
-# PANDABOX Uninstaller
+# WSL Kali Setup Uninstaller
 
-echo "🗑️ Cybersecurity Configuration Uninstaller"
-echo "=================================================="
+echo "🗑️ WSL Kali Cybersecurity Configuration Uninstaller"
+echo "===================================================="
 echo ""
 
-read -p "Are you sure you want to uninstall configuration? (y/N): " -n 1 -r
+read -p "Are you sure you want to uninstall WSL Kali configuration? (y/N): " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     echo "Uninstall cancelled."
@@ -294,7 +373,7 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 # Find backup directory
-BACKUP_DIR=$(find "$HOME" -maxdepth 1 -name ".pandabox_backup_*" -type d | head -1)
+BACKUP_DIR=$(find "$HOME" -maxdepth 1 -name ".wslkali_backup_*" -type d | head -1)
 
 if [ -n "$BACKUP_DIR" ] && [ -d "$BACKUP_DIR" ]; then
     echo "Restoring from backup: $BACKUP_DIR"
@@ -310,7 +389,7 @@ if [ -n "$BACKUP_DIR" ] && [ -d "$BACKUP_DIR" ]; then
         echo "✅ Restored oh-my-zsh"
     fi
 else
-    echo "⚠️ No backup found. Removing configuration..."
+    echo "⚠️ No backup found. Removing WSL Kali configuration..."
     rm -f "$HOME/.zshrc"
     
     if [ -f "$HOME/.zshrc.old" ]; then
@@ -333,25 +412,57 @@ fi
 rm -rf "$HOME/.config/cybersec"
 
 # Remove this uninstaller
-rm -f "$HOME/.uninstall.sh"
+rm -f "$HOME/.wslkali_uninstall.sh"
 
 echo ""
-echo "🗑️ uninstallation completed"
+echo "🗑️ WSL Kali uninstallation completed"
 echo "Please restart your terminal or run: source ~/.zshrc"
 EOF
     
-    chmod +x "$HOME/.uninstall.sh"
-    print_success "Uninstaller created at ~/.uninstall.sh"
+    chmod +x "$HOME/.wslkali_uninstall.sh"
+    print_success "Uninstaller created at ~/.wslkali_uninstall.sh"
+}
+
+# Install Go tools (optional)
+install_go_tools() {
+    print_status "Installing Go-based security tools..."
+    
+    # Check if Go is installed
+    if ! command_exists "go"; then
+        print_status "Installing Go programming language..."
+        wget -q https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
+        sudo tar -C /usr/local -xzf go1.21.5.linux-amd64.tar.gz
+        rm go1.21.5.linux-amd64.tar.gz
+        export PATH=$PATH:/usr/local/go/bin
+        echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.zshrc
+    fi
+    
+    # Install Go-based tools
+    local go_tools=(
+        "github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest"
+        "github.com/projectdiscovery/httpx/cmd/httpx@latest"
+        "github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest"
+        "github.com/tomnomnom/assetfinder@latest"
+        "github.com/tomnomnom/waybackurls@latest"
+        "github.com/tomnomnom/httprobe@latest"
+    )
+    
+    for tool in "${go_tools[@]}"; do
+        print_status "Installing $(basename $tool)..."
+        go install "$tool" || print_warning "Failed to install $tool"
+    done
+    
+    print_success "Go tools installation completed"
 }
 
 # Main installation function
 main() {
-    echo "🛡️Cybersecurity Configuration Installer"
-    echo "================================================"
+    echo "🛡️ WSL Kali Setup - Cybersecurity Configuration Installer"
+    echo "=========================================================="
     echo ""
     echo "This installer will:"
     echo "• Install Oh My Zsh and required plugins"
-    echo "• Install cybersecurity configuration"
+    echo "• Install WSL Kali cybersecurity configuration"
     echo "• Setup cybersecurity workspace"
     echo "• Install basic penetration testing tools"
     echo "• Create backup of existing configuration"
@@ -375,20 +486,30 @@ main() {
     set_default_shell
     create_uninstaller
     
+    # Ask about Go tools
     echo ""
-    echo "🎉 Installation Completed!"
-    echo "=================================="
+    read -p "Install Go-based security tools? (Y/n): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+        install_go_tools
+    fi
+    
+    echo ""
+    echo "🎉 WSL Kali Setup Installation Completed!"
+    echo "========================================"
     echo ""
     echo "📁 Backup created at: $BACKUP_DIR"
-    echo "🗑️ Uninstaller available at: ~/.pandabox_uninstall.sh"
+    echo "🗑️ Uninstaller available at: ~/.wslkali_uninstall.sh"
     echo ""
     echo "🚀 Next steps:"
     echo "1. Restart your terminal or run: source ~/.zshrc"
-    echo "2. Run: setup-cybersec (if not auto-completed)"
+    echo "2. Run: setup-cybersec (to initialize environment)"
     echo "3. Run: install-pentest-tools (for additional tools)"
     echo "4. Run: cybersec-help (for usage information)"
+    echo "5. Edit ~/.config/cybersec/api_keys.env (to add your API keys)"
     echo ""
     echo "📖 Documentation: https://github.com/cyb0rgdoll/wslkalisetup"
+    echo "🐛 Issues: https://github.com/cyb0rgdoll/wslkalisetup/issues"
     echo ""
     
     # Ask if user wants to restart shell now
@@ -399,5 +520,67 @@ main() {
     fi
 }
 
-# Run main function
-main "$@"
+# Handle script arguments
+case "${1:-}" in
+    "--help"|"-h")
+        echo "WSL Kali Setup - Cybersecurity Configuration Installer"
+        echo ""
+        echo "Usage: $0 [options]"
+        echo ""
+        echo "Options:"
+        echo "  --help, -h     Show this help message"
+        echo "  --unattended   Run installation without prompts"
+        echo "  --no-tools     Skip tool installation"
+        echo "  --no-go        Skip Go tools installation"
+        echo ""
+        echo "Examples:"
+        echo "  $0                    # Interactive installation"
+        echo "  $0 --unattended      # Automated installation"
+        echo "  $0 --no-tools        # Install config only, no tools"
+        echo ""
+        exit 0
+        ;;
+    "--unattended")
+        # Set unattended mode
+        export DEBIAN_FRONTEND=noninteractive
+        UNATTENDED=true
+        ;;
+    "--no-tools")
+        NO_TOOLS=true
+        ;;
+    "--no-go")
+        NO_GO=true
+        ;;
+esac
+
+# Unattended installation function
+unattended_install() {
+    echo "🤖 Running unattended installation..."
+    
+    create_backup
+    check_requirements
+    install_oh_my_zsh
+    install_zsh_plugins
+    install_configuration
+    
+    if [[ "$NO_TOOLS" != "true" ]]; then
+        install_basic_tools
+    fi
+    
+    setup_environment
+    set_default_shell
+    create_uninstaller
+    
+    if [[ "$NO_GO" != "true" && "$NO_TOOLS" != "true" ]]; then
+        install_go_tools
+    fi
+    
+    echo "✅ Unattended installation completed successfully!"
+}
+
+# Run appropriate installation
+if [[ "$UNATTENDED" == "true" ]]; then
+    unattended_install
+else
+    main "$@"
+fi
