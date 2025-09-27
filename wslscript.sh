@@ -1122,7 +1122,7 @@ export PATH=$PATH:~/cybersec/tools:~/go/bin:/usr/local/go/bin
 # COMPLETION
 # =====================================
 
-echo "🛡️ PANDABOX Cybersecurity Environment Loaded!"
+echo "🛡️ Cybersecurity Environment Loaded!"
 echo "📖 Type 'cybersec-help' for detailed usage information"
 echo "⚙️ Run 'setup-cybersec' to initialize your workspace"
 echo ""
