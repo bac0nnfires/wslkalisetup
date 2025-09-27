@@ -1,7 +1,5 @@
 # 🛡️WSL Kali Setup - Cybersecurity Configuration 
 
-A comprehensive, easy, user friendly Zsh configuration designed for cybersecurity professionals, penetration testers, and security researchers. This configuration provides an organized, efficient environment with automated tools and workflows for security testing.
-
 ## 🚀 Features
 
 ### Core Functionality
