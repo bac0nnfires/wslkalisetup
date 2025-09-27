@@ -1,7 +1,7 @@
 🛡️ WSL Kali Setup - Cybersecurity Configuration 
 
-<img width="450" height="400" alt="image" src="https://github.com/user-attachments/assets/610cc583-a541-49d7-8a65-1196b76f9047" />
-<img width="380" height="400" alt="image" src="https://github.com/user-attachments/assets/8b3651c0-90f8-4472-88de-c203cc6b0bc0" />
+<img width="781" height="868" alt="image" src="https://github.com/user-attachments/assets/b96fbd7d-c42b-4477-acd4-c1032546f75a" />
+
 
 
 ## 🚀 Features 🚀
